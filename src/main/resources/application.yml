@@ -1,0 +1,8 @@
+server:
+  port: 8080
+  context-path: /
+  display-name: MongoSearch
+spring:
+  data:
+    mongodb:
+      uri: mongodb://test:test@127.0.0.1:27017/MongoSearch
