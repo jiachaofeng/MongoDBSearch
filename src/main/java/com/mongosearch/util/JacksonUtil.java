@@ -1,5 +1,7 @@
 package com.mongosearch.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,8 @@ public class JacksonUtil {
      */
     public static String objectToJson(Object data) {
         try {
+            //Set object's private property visible
+            MAPPER.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
             String string = MAPPER.writeValueAsString(data);
             return string;
         } catch (JsonProcessingException e) {

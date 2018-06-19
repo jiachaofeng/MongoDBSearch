@@ -6,3 +6,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://test:test@127.0.0.1:27017/MongoSearch
+logging:
+  level:
+    org.springframework.data.mongodb.core: DEBUG
