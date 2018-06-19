@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+				$(document).ready(function() {
+					//var searchVal = $('#searchVal').val();
+					var searchVal = GetQueryString("searchVal");
+					console.log("Search Val: " + searchVal);
+					$('#searchVal').val(searchVal);
+					var reqJson = {"searchVal" : searchVal};
+					console.log("reqJson: " + JSON.stringify(reqJson));
+
+					$('#datatable').DataTable({
+						"searching": true,
+						"deferRender": true,
+						"stateSave": true,
+						"ajax": {
+							url: "searchService",
+							type: "POST",
+							contentType:"application/json;charset=utf-8",
+							data: function(d){
+								return JSON.stringify(reqJson);
+							 }
+						},
+						"columns":[
+							{data: 'type'},
+							{data: 'subType1'},
+							{data: 'subType2'},
+							{data: 'subType3'},
+							{data: 'docDtl.dtlType'},
+							{data: 'docDtl.dtlName'},
+							{
+								data: 'docDtl.dtlUrl',
+								render: function(data, type, row, meta){
+									return '<a href="'+data+'">' + data + '</a>'
+								}
+							 },
+							{data: 'docDtl.dtlRemark'},
+						],
+						"language": {
+							"sProcessing": "处理中...",
+							"sLengthMenu": "显示 _MENU_ 项结果",
+							"sZeroRecords": "没有匹配结果",
+							"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+							"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+							"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+							"sInfoPostFix": "",
+							"sSearch": "过滤:",
+							"sUrl": "",
+							"sEmptyTable": "表中数据为空",
+							"sLoadingRecords": "载入中...",
+							"sInfoThousands": ",",
+							"oPaginate": {
+								"sFirst": "首页",
+								"sPrevious": "上页",
+								"sNext": "下页",
+								"sLast": "末页"
+							 },
+							"oAria": {
+								"sSortAscending": ": 以升序排列此列",
+								"sSortDescending": ": 以降序排列此列"
+							}
+						 }
+					});
+			} );
+
+
+            function onKeyDown(event){
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                if(e && e.keyCode==13){ // enter 键
+                    console.log("此处回车触发搜索事件");
+                    var searchVal = $('#searchVal').val();
+			        console.log("Search Val: " + searchVal);
+			        window.location.href = "search.html?searchVal=" + searchVal;
+                }
+            }
+
+            function GetQueryString(name)
+            {
+                 var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                 var r = window.location.search.substr(1).match(reg);
+                 if(r!=null)return  unescape(r[2]); return null;
+            }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column" style="padding: 50px 10px 10px">
+            <div class="input-group">
+                <input id="searchVal" type="text" value="" class="form-control" onkeydown="onKeyDown(event)"/>
+                <span class="input-group-addon"><a href="#"><i class="glyphicon glyphicon-search"> <span>搜索<span
+                        class="space"
+                        style="white-space:pre;display:inline-block;text-indent:2em;line-height:inherit;"> </span><span
+                        class="space"
+                        style="white-space:pre;display:inline-block;text-indent:2em;line-height:inherit;"> </span><span
+                        class="space"
+                        style="white-space:pre;display:inline-block;text-indent:2em;line-height:inherit;"> </span></span></i></a></span>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <table id="datatable" class="display" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Sub Type1</th>
+                    <th>Sub Type2</th>
+                    <th>Sub Type3</th>
+                    <th>Dtl Type</th>
+                    <th>Dtl Name</th>
+                    <th>URL</th>
+                    <th>Remark</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
